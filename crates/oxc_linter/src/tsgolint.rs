@@ -542,7 +542,12 @@ impl TsGoLintState {
                     .iter()
                     .filter_map(|(rule, status)| {
                         if status.is_warn_deny() && rule.is_tsgolint_rule() {
-                            Some(Rule { name: rule.name().to_string() })
+                            let rule_name = rule.name().to_string();
+                            let options = match rule.to_configuration() {
+                                Some(Ok(config)) => Some(config),
+                                Some(Err(_)) | None => None,
+                            };
+                            Some(Rule { name: rule_name, options })
                         } else {
                             None
                         }
@@ -571,6 +576,7 @@ impl TsGoLintState {
 ///
 /// ```json
 /// {
+///   "version": 2,
 ///   "configs": [
 ///     {
 ///       "file_paths": ["/absolute/path/to/file.ts", "/another/file.ts"],
@@ -598,9 +604,24 @@ pub struct Config {
     pub rules: Vec<Rule>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, Hash, Eq, PartialEq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Serialize, Deserialize, Hash, Eq, PartialEq)]
 pub struct Rule {
     pub name: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub options: Option<serde_json::Value>,
+}
+
+impl PartialOrd for Rule {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Rule {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        // Only compare by name since options doesn't implement Ord
+        self.name.cmp(&other.name)
+    }
 }
 
 /// Diagnostic kind discriminator
