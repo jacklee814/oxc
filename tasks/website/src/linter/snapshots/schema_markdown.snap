@@ -198,13 +198,24 @@ Globs to ignore during linting. These are resolved from the configuration file p
 
 ## jsPlugins
 
-type: `string[]`
+type: `[
+  array,
+  null
+]`
 
 
 JS plugins.
 
 Note: JS plugins are experimental and not subject to semver.
 They are not supported in language server at present.
+
+
+### jsPlugins[n]
+
+type: `string | object`
+
+
+
 
 
 ## overrides
@@ -249,13 +260,24 @@ Enabled or disabled specific global variables.
 
 #### overrides[n].jsPlugins
 
-type: `string[]`
+type: `[
+  array,
+  null
+]`
 
 
 JS plugins for this override.
 
 Note: JS plugins are experimental and not subject to semver.
 They are not supported in language server at present.
+
+
+##### overrides[n].jsPlugins[n]
+
+type: `string | object`
+
+
+
 
 
 ### overrides[n].plugins

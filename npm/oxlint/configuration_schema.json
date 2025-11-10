@@ -54,7 +54,7 @@
         "null"
       ],
       "items": {
-        "type": "string"
+        "$ref": "#/definitions/ExternalPluginEntry"
       },
       "uniqueItems": true
     },
@@ -203,6 +203,33 @@
       "additionalProperties": {
         "$ref": "#/definitions/DummyRule"
       }
+    },
+    "ExternalPluginEntry": {
+      "anyOf": [
+        {
+          "description": "Path or package name of the plugin",
+          "type": "string"
+        },
+        {
+          "description": "Plugin with custom name/alias",
+          "type": "object",
+          "required": [
+            "name",
+            "specifier"
+          ],
+          "properties": {
+            "name": {
+              "description": "Custom name/alias for the plugin",
+              "type": "string"
+            },
+            "specifier": {
+              "description": "Path or package name of the plugin",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
     },
     "GlobSet": {
       "description": "A set of glob patterns.",
@@ -448,9 +475,8 @@
             "null"
           ],
           "items": {
-            "type": "string"
-          },
-          "uniqueItems": true
+            "$ref": "#/definitions/ExternalPluginEntry"
+          }
         },
         "plugins": {
           "description": "Optionally change what plugins are enabled for this override. When\nomitted, the base config's plugins are used.",
