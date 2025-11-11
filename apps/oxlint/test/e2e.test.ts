@@ -272,15 +272,15 @@ describe('oxlint CLI', () => {
     await testFixture('isSpaceBetween');
   });
 
-  it("should report an error when a custom plugin name is aliased to a reserve name", async () => {
+  it('should report an error when a custom plugin name is aliased to a reserve name', async () => {
     await testFixture('custom_plugin_name_alias_reserved_name');
   });
 
   it("should allow for custom plugins' name to be aliased", async () => {
     await testFixture('custom_plugin_name_alias');
-  })
+  });
 
   it("should allow for custom plugins' name to be aliased when extending another config", async () => {
     await testFixture('custom_plugin_name_alias_with_extends');
-  })
+  });
 });
