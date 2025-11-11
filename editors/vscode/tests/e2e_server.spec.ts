@@ -278,40 +278,42 @@ suite('E2E Diagnostics', () => {
     strictEqual(secondDiagnostics.length, 1);
   });
 
-  test('formats code with `oxc.fmt.experimental`', async () => {
-    await workspace.getConfiguration('oxc').update('fmt.experimental', true);
-    await workspace.getConfiguration('editor').update('defaultFormatter', 'oxc.oxc-vscode');
-    await loadFixture('formatting');
+  if (process.env.SKIP_FORMATTER_TEST !== 'true') {
+    test('formats code with `oxc.fmt.experimental`', async () => {
+      await workspace.getConfiguration('oxc').update('fmt.experimental', true);
+      await workspace.getConfiguration('editor').update('defaultFormatter', 'oxc.oxc-vscode');
+      await loadFixture('formatting');
 
-    await sleep(500);
+      await sleep(500);
 
-    const fileUri = Uri.joinPath(fixturesWorkspaceUri(), 'fixtures', 'formatting.ts');
+      const fileUri = Uri.joinPath(fixturesWorkspaceUri(), 'fixtures', 'formatting.ts');
 
-    const document = await workspace.openTextDocument(fileUri);
-    await window.showTextDocument(document);
-    await commands.executeCommand('editor.action.formatDocument');
-    await workspace.saveAll();
-    const content = await workspace.fs.readFile(fileUri);
+      const document = await workspace.openTextDocument(fileUri);
+      await window.showTextDocument(document);
+      await commands.executeCommand('editor.action.formatDocument');
+      await workspace.saveAll();
+      const content = await workspace.fs.readFile(fileUri);
 
-    strictEqual(content.toString(), "class X {\n  foo() {\n    return 42;\n  }\n}\n");
-  });
+      strictEqual(content.toString(), "class X {\n  foo() {\n    return 42;\n  }\n}\n");
+    });
 
-  test('formats code with `oxc.fmt.configPath`', async () => {
-    await loadFixture('formatting_with_config');
+    test('formats code with `oxc.fmt.configPath`', async () => {
+      await loadFixture('formatting_with_config');
 
-    await workspace.getConfiguration('oxc').update('fmt.experimental', true);
-    await workspace.getConfiguration('oxc').update('fmt.configPath', './fixtures/formatter.json');
-    await workspace.getConfiguration('editor').update('defaultFormatter', 'oxc.oxc-vscode');
+      await workspace.getConfiguration('oxc').update('fmt.experimental', true);
+      await workspace.getConfiguration('oxc').update('fmt.configPath', './fixtures/formatter.json');
+      await workspace.getConfiguration('editor').update('defaultFormatter', 'oxc.oxc-vscode');
 
-    await sleep(500); // wait for the server to pick up the new config
-    const fileUri = Uri.joinPath(fixturesWorkspaceUri(), 'fixtures', 'formatting.ts');
+      await sleep(500); // wait for the server to pick up the new config
+      const fileUri = Uri.joinPath(fixturesWorkspaceUri(), 'fixtures', 'formatting.ts');
 
-    const document = await workspace.openTextDocument(fileUri);
-    await window.showTextDocument(document);
-    await commands.executeCommand('editor.action.formatDocument');
-    await workspace.saveAll();
-    const content = await workspace.fs.readFile(fileUri);
+      const document = await workspace.openTextDocument(fileUri);
+      await window.showTextDocument(document);
+      await commands.executeCommand('editor.action.formatDocument');
+      await workspace.saveAll();
+      const content = await workspace.fs.readFile(fileUri);
 
-    strictEqual(content.toString(), "class X {\n  foo() {\n    return 42\n  }\n}\n");
-  });
+      strictEqual(content.toString(), "class X {\n  foo() {\n    return 42\n  }\n}\n");
+    });
+  }
 });

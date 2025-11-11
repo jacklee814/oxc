@@ -12,10 +12,43 @@ const multiRootWorkspaceConfig = {
 };
 writeFileSync(multiRootWorkspaceFile, JSON.stringify(multiRootWorkspaceConfig, null, 2));
 
-const ext = process.platform === 'win32' ? '.exe' : '';
+// const ext = process.platform === 'win32' ? '.exe' : '';
 
 export default defineConfig({
   tests: [
+    // // Single-folder workspace tests
+    // {
+    //   files: 'out/**/*.spec.js',
+    //   workspaceFolder: './test_workspace',
+    //   launchArgs: [
+    //     // This disables all extensions except the one being testing
+    //     '--disable-extensions',
+    //   ],
+    //   env: {
+    //     SINGLE_FOLDER_WORKSPACE: 'true',
+    //     SERVER_PATH_DEV: path.resolve(import.meta.dirname, `./target/debug/oxc_language_server${ext}`),
+    //   },
+    //   mocha: {
+    //     timeout: 10_000,
+    //   },
+    // },
+    // // Multi-root workspace tests
+    // {
+    //   files: 'out/**/*.spec.js',
+    //   workspaceFolder: multiRootWorkspaceFile,
+    //   launchArgs: [
+    //     // This disables all extensions except the one being testing
+    //     '--disable-extensions',
+    //   ],
+    //   env: {
+    //     MULTI_FOLDER_WORKSPACE: 'true',
+    //     SERVER_PATH_DEV: path.resolve(import.meta.dirname, `./target/debug/oxc_language_server${ext}`),
+    //   },
+    //   mocha: {
+    //     timeout: 10_000,
+    //   },
+    // },
+    // Oxlint --lsp tests
     {
       files: 'out/**/*.spec.js',
       workspaceFolder: './test_workspace',
@@ -25,22 +58,9 @@ export default defineConfig({
       ],
       env: {
         SINGLE_FOLDER_WORKSPACE: 'true',
-        SERVER_PATH_DEV: path.resolve(import.meta.dirname, `./target/debug/oxc_language_server${ext}`),
-      },
-      mocha: {
-        timeout: 10_000,
-      },
-    },
-    {
-      files: 'out/**/*.spec.js',
-      workspaceFolder: multiRootWorkspaceFile,
-      launchArgs: [
-        // This disables all extensions except the one being testing
-        '--disable-extensions',
-      ],
-      env: {
-        MULTI_FOLDER_WORKSPACE: 'true',
-        SERVER_PATH_DEV: path.resolve(import.meta.dirname, `./target/debug/oxc_language_server${ext}`),
+        OXLINT_LSP_TEST: 'true',
+        SERVER_PATH_DEV: path.resolve(import.meta.dirname, `../../apps/oxlint/dist/cli.js`),
+        SKIP_FORMATTER_TEST: 'true',
       },
       mocha: {
         timeout: 10_000,

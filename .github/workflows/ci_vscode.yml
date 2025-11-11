@@ -45,6 +45,10 @@ jobs:
         working-directory: editors/vscode
         run: pnpm run server:build:debug
 
+      - name: Build oxlint (with napi)
+        working-directory: apps/oxlint
+        run: pnpm run build-napi-test && pnpm run build-js
+
       - name: Compile VSCode
         working-directory: editors/vscode
         run: pnpm run compile
