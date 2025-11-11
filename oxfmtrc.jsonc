@@ -6,7 +6,15 @@
     "**/dist/**",
     "**/tests/**",
     "**/generated/**",
-    "**/fixtures/**",
+
+    // Ignore `fixtures` directories except for `apps/oxlint/test/fixtures`
+    "apps/oxfmt/test/fixtures/**",
+    "apps/oxlint/fixtures/**",
+    "crates/oxc_linter/fixtures/**",
+    "crates/oxc_language_server/fixtures/**",
+    "editors/vscode/fixtures/**",
+    "tasks/transform_conformance/overrides/**",
+
     "tasks/coverage/node-compat-table",
     "tasks/coverage/misc",
     "tasks/coverage/src/runtime/babelHelpers.js",
